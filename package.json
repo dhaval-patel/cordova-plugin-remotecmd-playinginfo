@@ -1,0 +1,21 @@
+{
+  "name": "cordova-plugin-remotecmd-playinginfo",
+  "version": "0.1.3",
+  "description": "Cordova Media Remote Command and Now Playing Info Centers Plugin",
+  "cordova": {
+    "id": "cordova-plugin-remotecmd-playinginfo",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "media",
+    "remote command center",
+    "now playing info center",
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "author": "Florin Lohan",
+  "license": "Apache 2.0"
+}
