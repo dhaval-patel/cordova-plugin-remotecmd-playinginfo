@@ -45,6 +45,9 @@ NSMutableDictionary *newInfo;
         if (filePath == nil) {
             resourceURL = [NSURL URLWithString:resourcePath];
         }
+	} else if ([resourcePath containsString:@"http"] || [resourcePath containsString:@"https"]) {
+      	resourceURL = [NSURL URLWithString:resourcePath];
+	   	return resourceURL;
     } else {
         // attempt to find file path in www directory or LocalFileSystem.TEMPORARY directory
         filePath = [self.commandDelegate pathForResource:resourcePath];
