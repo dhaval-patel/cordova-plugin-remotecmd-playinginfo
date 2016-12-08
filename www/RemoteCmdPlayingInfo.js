@@ -77,6 +77,8 @@ RemoteCmdPlayingInfo.EVENT_TOGGLE_PLAY_PAUSE = 3;
 
 RemoteCmdPlayingInfo.EVENT_SKIP_FORWARD = 4;
 RemoteCmdPlayingInfo.EVENT_SKIP_BACKWARD = 5;
+RemoteCmdPlayingInfo.EVENT_NEXT_TRACK = 6;
+RemoteCmdPlayingInfo.EVENT_PREV_TRACK = 7;
 
 
 RemoteCmdPlayingInfo.onEvent = function(eventType, value) {

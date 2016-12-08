@@ -107,6 +107,22 @@ NSMutableDictionary *newInfo;
         MPRemoteCommand *togglePPCommand = [rcc togglePlayPauseCommand];
         [togglePPCommand setEnabled:YES];
         [togglePPCommand addTarget:self action:@selector(playOrPauseEvent:)];
+
+        NSNumber *receiveNextTrackEvent=[audioInfo objectForKey:@"receiveNextTrackEvent"];
+        if(receiveNextTrackEvent){
+            MPRemoteCommand *nextTrackCommand = [rcc nextTrackCommand];
+            [nextTrackCommand setEnabled:YES];
+            [nextTrackCommnd addTarget:self action:@selector(nextEvent)];
+        }
+
+        NSNumber *receivePrevTrackEvent=[audioInfo objectForKey:@"receivePrevTrackEvent"];
+        if(receivePrevTrackEvent){
+            MPRemoteCommand *previousTrackCommand = [rcc previousTrackCommand];
+            [previousTrackCommand setEnabled:YES];
+            [previousTrackCommand addTarget:self action:@selector(previousEvent)];
+        }
+        // [[MPRemoteCommandCenter sharedCommandCenter].nextTrackCommand addTarget:self action:@selector(remoteNextPrevTrackCommandReceived:)];
+        // [[MPRemoteCommandCenter sharedCommandCenter].previousTrackCommand addTarget:self action:@selector(remoteNextPrevTrackCommandReceived:)];
         
         //do we have skip forward?
         NSNumber *skipForwardValue=[audioInfo objectForKey:@"skipForwardValue"];
@@ -241,6 +257,18 @@ NSMutableDictionary *newInfo;
     NSLog(@"XXXXXXXXX SkipBackwardEvent: %@",event);
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%f);",
                 @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",5,event.interval];
+    [self.commandDelegate evalJs:jsString];
+}
+
+- (void) nextEvent:(MPRemoteCommandEvent*)event {
+    NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
+                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",6,0];
+    [self.commandDelegate evalJs:jsString];
+}
+
+- (void) prevEvent:(MPRemoteCommandEvent*)event {
+    NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
+                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",7,0];
     [self.commandDelegate evalJs:jsString];
 }
 
