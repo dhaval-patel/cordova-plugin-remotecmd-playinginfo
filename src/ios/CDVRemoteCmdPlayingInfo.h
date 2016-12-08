@@ -58,4 +58,7 @@ typedef NSUInteger CDVMediaMsg;
 - (void) skipForwardEvent: (MPSkipIntervalCommandEvent*)event;
 - (void) skipBackwardEvent:(MPSkipIntervalCommandEvent*)event;
 
+- (void) nextEvent:(MPRemoteCommandEvent*)event;
+- (void) prevEvent:(MPRemoteCommandEvent*)event;
+
 @end

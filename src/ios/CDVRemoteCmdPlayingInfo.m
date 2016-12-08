@@ -6,9 +6,9 @@
  to you under the Apache License, Version 2.0 (the
  "License"); you may not use this file except in compliance
  with the License.  You may obtain a copy of the License at
-
+ 
  http://www.apache.org/licenses/LICENSE-2.0
-
+ 
  Unless required by applicable law or agreed to in writing,
  software distributed under the License is distributed on an
  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -45,9 +45,12 @@ NSMutableDictionary *newInfo;
         if (filePath == nil) {
             resourceURL = [NSURL URLWithString:resourcePath];
         }
-	} else if ([resourcePath containsString:@"http"] || [resourcePath containsString:@"https"]) {
-      	resourceURL = [NSURL URLWithString:resourcePath];
-	   	return resourceURL;
+    } else if ([resourcePath containsString:@"http"] || [resourcePath containsString:@"https"]) {
+        //resourceURL = [NSURL URLWithString:resourcePath];
+        //localisationName is a arbitrary string here
+        NSString* webStringURL = [resourcePath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSURL* url = [NSURL URLWithString:webStringURL];
+        return url;
     } else {
         // attempt to find file path in www directory or LocalFileSystem.TEMPORARY directory
         filePath = [self.commandDelegate pathForResource:resourcePath];
@@ -107,19 +110,19 @@ NSMutableDictionary *newInfo;
         MPRemoteCommand *togglePPCommand = [rcc togglePlayPauseCommand];
         [togglePPCommand setEnabled:YES];
         [togglePPCommand addTarget:self action:@selector(playOrPauseEvent:)];
-
+        
         NSNumber *receiveNextTrackEvent=[audioInfo objectForKey:@"receiveNextTrackEvent"];
         if(receiveNextTrackEvent){
             MPRemoteCommand *nextTrackCommand = [rcc nextTrackCommand];
             [nextTrackCommand setEnabled:YES];
-            [nextTrackCommnd addTarget:self action:@selector(nextEvent)];
+            [nextTrackCommand addTarget:self action:@selector(nextEvent:)];
         }
-
+        
         NSNumber *receivePrevTrackEvent=[audioInfo objectForKey:@"receivePrevTrackEvent"];
         if(receivePrevTrackEvent){
             MPRemoteCommand *previousTrackCommand = [rcc previousTrackCommand];
             [previousTrackCommand setEnabled:YES];
-            [previousTrackCommand addTarget:self action:@selector(previousEvent)];
+            [previousTrackCommand addTarget:self action:@selector(prevEvent:)];
         }
         // [[MPRemoteCommandCenter sharedCommandCenter].nextTrackCommand addTarget:self action:@selector(remoteNextPrevTrackCommandReceived:)];
         // [[MPRemoteCommandCenter sharedCommandCenter].previousTrackCommand addTarget:self action:@selector(remoteNextPrevTrackCommandReceived:)];
@@ -144,7 +147,7 @@ NSMutableDictionary *newInfo;
             [skipBackwardIntervalCommand addTarget:self action:@selector(skipBackwardEvent:)];
         }
     }
-
+    
     NSNumber *useNowPlayingInfo=[audioInfo objectForKey:@"useNowPlayingInfo"];
     if(!useNowPlayingInfo || [useNowPlayingInfo boolValue]){
         newInfo=[NSMutableDictionary dictionary];
@@ -231,44 +234,44 @@ NSMutableDictionary *newInfo;
 
 - (void) playEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",1,0];
+                                     @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",1,0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) pauseEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",2,0];
+                                     @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",2,0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) playOrPauseEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",3,0];
+                                     @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",3,0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) skipForwardEvent:(MPSkipIntervalCommandEvent *)event {
     NSLog(@"XXXXXXXXX SkipForwardEvent: %@",event);
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%f);",
-                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",4,event.interval];
+                                     @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",4,event.interval];
     [self.commandDelegate evalJs:jsString];
 }
 - (void) skipBackwardEvent:(MPSkipIntervalCommandEvent *)event {
     NSLog(@"XXXXXXXXX SkipBackwardEvent: %@",event);
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%f);",
-                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",5,event.interval];
+                                     @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",5,event.interval];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) nextEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",6,0];
+                                     @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",6,0];
     [self.commandDelegate evalJs:jsString];
 }
 
 - (void) prevEvent:(MPRemoteCommandEvent*)event {
     NSString* jsString = jsString = [NSString stringWithFormat:@"%@(%d,%d);",
-                @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",7,0];
+                                     @"cordova.require('cordova-plugin-remotecmd-playinginfo.RemoteCmdPlayingInfo').onEvent",7,0];
     [self.commandDelegate evalJs:jsString];
 }
 
